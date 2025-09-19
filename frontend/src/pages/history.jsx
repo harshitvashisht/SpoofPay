@@ -7,7 +7,7 @@ import { BACKEND_URL } from "../config";
 function TransactionHistory (){
  
     const[transactionhistory , setTransactionHistory] = useState([])
-    const[recievedTransaction , setRecievedTransaction] = useState([])
+   
         useEffect(()=>{
               async function allTransactions(){
               try {
@@ -18,8 +18,19 @@ function TransactionHistory (){
                     }
                 }) 
 
-            setTransactionHistory(response.data.sent)
-            setRecievedTransaction(response.data.recieved)
+            const sentTx = (response.data.sent || []).map((tx) => ({
+                      ...tx,
+                      type: "sent",
+                   }));
+        const receivedTx = (response.data.recieved || []).map((tx) => ({
+                       ...tx,
+                       type: "received",
+        }));
+
+        const merged = [...sentTx, ...receivedTx].sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        )
+        setTransactionHistory(merged)
 
               } catch (error) {
                 console.error("Server Error !")
@@ -32,24 +43,25 @@ function TransactionHistory (){
 
     return <div>
         <Appbar BarText={"Transaction History"} type={"true"}/>
-        <ul className="space-y-4 mt-4 ">
-            {transactionhistory.map((transactions) => (
-      <li className="shadow-md p-3  bg-red-200 ">
-        <div>Reciever's Name : {transactions.fullname}</div>
-        <div>Amount: {transactions.sentAmount}</div>
-        <div>Reciever: {transactions.sendto}</div>
-        <div>TransactionID: {transactions.transactionID}  </div>
-        <div>Time : {new Date(transactions.date).toLocaleString()} </div>
-      
-      </li>
-    ))}
-        </ul>
-
-        <ul className="space-y-4 mt-2">
-        {recievedTransaction.map((tx) => (
-          <li key={tx._id} className="shadow-md p-3 bg-green-200 rounded">
-            <div>Sender: {tx.sendto}</div>
-            <div>Amount Received: {tx.sentAmount}</div>
+        <ul className="space-y-4 mt-4">
+        {transactionhistory.map((tx) => (
+          <li
+            key={tx._id}
+            className={`shadow-md p-3 rounded ${
+              tx.type === "sent" ? "bg-red-200" : "bg-green-200"
+            }`}
+          >
+            {tx.type === "sent" ? (
+              <>
+                <div>Receiver: {tx.sendto}</div>
+                <div>Amount Sent: {tx.sentAmount}</div>
+              </>
+            ) : (
+              <>
+                <div>Sender: {tx.sendto}</div>
+                <div>Amount Received: {tx.sentAmount}</div>
+              </>
+            )}
             <div>Transaction ID: {tx.transactionID}</div>
             <div>Time: {new Date(tx.date).toLocaleString()}</div>
           </li>
