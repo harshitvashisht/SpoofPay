@@ -21,10 +21,12 @@ function TransactionHistory (){
             const sentTx = (response.data.sent || []).map((tx) => ({
                       ...tx,
                       type: "sent",
+                      FirstName
                    }));
         const receivedTx = (response.data.recieved || []).map((tx) => ({
                        ...tx,
                        type: "received",
+                       FirstName
         }));
 
         const merged = [...sentTx, ...receivedTx].sort(
@@ -43,30 +45,46 @@ function TransactionHistory (){
 
     return <div>
         <Appbar BarText={"Transaction History"} type={"true"}/>
-        <ul className="space-y-4 mt-4">
-        {transactionhistory.map((tx) => (
-          <li
-            key={tx._id}
-            className={`shadow-md p-3 rounded ${
-              tx.type === "sent" ? "bg-red-200" : "bg-green-200"
-            }`}
-          >
-            {tx.type === "sent" ? (
-              <>
-                <div>Receiver: {tx.sendto}</div>
-                <div>Amount Sent: {tx.sentAmount}</div>
-              </>
-            ) : (
-              <>
-                <div>Sender: {tx.sendto}</div>
-                <div>Amount Received: {tx.sentAmount}</div>
-              </>
-            )}
-            <div>Transaction ID: {tx.transactionID}</div>
-            <div>Time: {new Date(tx.date).toLocaleString()}</div>
-          </li>
-        ))}
-      </ul>
+        <div className="bg-gray-200 px-2 py-10">
+  <div id="transaction-history" className="mx-auto max-w-6xl">
+    <p className="text-center text-base font-semibold leading-7 text-primary-500">
+      Transaction History
+    </p>
+    <h2 className="text-center font-display text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
+      Your Recent Transactions
+    </h2>
+    <ul className="mt-16 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {transactionhistory.map((tx) => (
+        <li
+          key={tx._id}
+          className={`rounded-xl px-6 py-6 shadow-sm text-slate-800 ${
+            tx.type === "sent" ? "bg-red-200" : "bg-green-200"
+          }`}
+        >
+          <h3 className="font-display text-lg font-medium mb-2">
+            {tx.type === "sent" ? "Sent Transaction" : "Received Transaction"}
+          </h3>
+
+          {tx.type === "sent" ? (
+            <>
+              <p className="text-sm">Receiver: <span className="font-semibold">{tx.sendto}</span></p>
+              <p className="text-sm">Receiver Name: <span className="font-semibold">{tx.FirstName}</span></p>
+              <p className="text-sm">Amount Sent: <span className="font-semibold">{tx.sentAmount}</span></p>
+            </>
+          ) : (
+            <>
+              <p className="text-sm">Sender: <span className="font-semibold">{tx.sendto}</span></p>
+              <p className="text-sm">Amount Received: <span className="font-semibold">{tx.sentAmount}</span></p>
+            </>
+          )}
+
+          <p className="text-sm mt-2">Transaction ID: {tx.transactionID}</p>
+          <p className="text-xs text-gray-600">Time: {new Date(tx.date).toLocaleString()}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
     </div>
 }
 

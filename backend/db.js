@@ -44,8 +44,7 @@ const TransactionSchema = new mongoose.Schema({
   },
     amount : {type : Number},
     sentAmount : {type : Number , required : true},
-    date: {type: Date , default: Date.now},
-    fullName: {type: String},
+    date: {type: Date , default: Date.now}
 }) 
 const TransactionModel = mongoose.model('Transactions' , TransactionSchema)
 
