@@ -11,8 +11,8 @@ function Dashboard (){
      
      <Appbar BarText={"SpoofPay"} type={"true"}/>
      <Userbalance/> 
-     <Usercomponent/>
-    
+      <Usercomponent/>
+      
     </div>
 }
 
