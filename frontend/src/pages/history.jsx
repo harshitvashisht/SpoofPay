@@ -20,13 +20,11 @@ function TransactionHistory (){
 
             const sentTx = (response.data.sent || []).map((tx) => ({
                       ...tx,
-                      type: "sent",
-                      FirstName
+                      type: "sent"
                    }));
         const receivedTx = (response.data.recieved || []).map((tx) => ({
                        ...tx,
-                       type: "received",
-                       FirstName
+                       type: "received"
         }));
 
         const merged = [...sentTx, ...receivedTx].sort(
@@ -68,7 +66,6 @@ function TransactionHistory (){
           {tx.type === "sent" ? (
             <>
               <p className="text-sm">Receiver: <span className="font-semibold">{tx.sendto}</span></p>
-              <p className="text-sm">Receiver Name: <span className="font-semibold">{tx.FirstName}</span></p>
               <p className="text-sm">Amount Sent: <span className="font-semibold">{tx.sentAmount}</span></p>
             </>
           ) : (
